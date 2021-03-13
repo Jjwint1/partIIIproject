@@ -1,0 +1,15 @@
+figures
+.DS_store
+pres-cache.yaml
+pres.aux
+pres.bbl
+pres.bcf
+pres.blg
+pres.fls
+pres.nav
+pres.out
+pres.run.xml
+pres.snm
+pres.synctex.gz
+pres.log
+pres.toc
