@@ -86,7 +86,29 @@
   \end{frame}
 
   \begin{frame}
-    
+    Horizon AGN also provides predictions for flux, based on stars:
+    \begin{itemize}
+      \item Star properties: mass, age, metallicity $\rightarrow$ spectrum;
+      \item These are combined to give a flux prediction. An image of the simulated flux is shown.
+    \end{itemize}
+    \begin{figure}
+      \centering
+      \includegraphics[scale=0.3]{figures/hagn/HAGN_img.png}
+    \end{figure}
+  \end{frame}
+
+  \begin{frame}
+    The deflection field is computed from the same gravitational acceleration field used to evolve Eularian quantities in the hydrodynamical simulation. These deflection maps were given to me as the starting point for my work.
+    \note{Limitations arise if cells on the boundary of adjacent slabs are updated inbetween the simulation timesteps, but this is rare.\\}
+    \begin{itemize}
+      \item This is performed recursively for each lens plane.
+      \item Goes beyond the Born approximation.
+      \note{Born approximation: integrate along straight-line line of sight.}
+    \end{itemize}
+    \begin{figure}[H]
+      \centering
+      \includegraphics[width=0.5\textwidth]{figures/hagn/lens-plane-deflection}
+    \end{figure}
   \end{frame}
 
   \subsection{Gravitational Lensing}
@@ -135,13 +157,13 @@
   \begin{frame}
     The thin lens approximation gives the following relationship between the unobservable true source position $\color{green}{\vec{\beta}}$ and the observed image position $\color{blue}{\vec{\theta}}$:
     \begin{equation} \label{eq:lens}
-      \color{green}{\vec{\beta}} \color{black}= \color{blue}{\vec{\theta}} - \color{black}{\frac{D_{\text{ls}}}{D_{\text{s}}}}\color{red}{\vec{\alpha}}\left( \vec{\theta} \right)\color{black}
+      \color{green}{\vec{\beta}} \color{black}= \color{blue}{\vec{\theta}} - \color{black}{\frac{D_{\text{ls}}}{D_{\text{s}}}}\color{red}{\vec{\alpha}}\left( \vec{\theta} \right)\color{black}.
     \end{equation}
-    where the deflection angle $\color{red}{\vec{\alpha}}$ is found by integrating the gravitational potential along the line of sight. The raytracing through the lightcone discretizes the space into transverse planes, and the deflection is calculated recursively from the observer out to a given source redshift.
+    \note{This mapping is the basis from which most quantities are derivable. The defelcton angle $\alpha$ is exactly that which is produced by the raytracing. This mapping is also useful for cross referencing lenses to sources in lensing events, as the image positions can be projected into the source plane.}
   \end{frame}
 
   \begin{frame}
-    The result is a deflection map describing the two orthogonal components of $\vec{\alpha}$ at each point in the field of view. A Taylor expansion of the lens equation \ref{eq:lens} gives the Jacobian of the $\vec{\theta} \rightarrow \vec{\beta}$ mapping, defining the magnification tensor
+    A Taylor expansion of the lens equation \ref{eq:lens} gives the Jacobian of the $\vec{\theta} \rightarrow \vec{\beta}$ mapping, defining the magnification tensor
 
     \begin{equation} \label{eq:mu tensor}
       a_{ij}\left( \vec{\theta} \right) = \frac{\partial\vec{\beta}}{\partial\vec{\theta}} = \delta_{ij} - \phi_{,ij} \equiv
@@ -155,13 +177,13 @@
   \end{frame}
 
   \begin{frame}
-    Hence given a deflection field defined on the field of view of a slice of the lightcone, the lensing observables can be calculated by
+    The lensing observables can be calculated by
     \begin{align} \label{eq:lensing observables}
       \kappa &= \frac{1}{2}\left( \alpha_{1,1} + \alpha_{2,2} \right) \\
       \gamma_1 &= \frac{1}{2}\left( \alpha_{1,1} - \alpha_{2,2} \right) \\
       \gamma_2 &= \alpha_{1,2} = \alpha_{2,1}
     \end{align}
-    which can be computed numerically using finite differences, yielding a convergence and shear map defined over the field of view.
+    which can be computed numerically using finite differences.
   \end{frame}
 
   \begin{frame}
@@ -190,7 +212,7 @@
       \Delta\Sigma\left( R \right) = \frac{M\left( <R \right)}{\pi R^2} - \Sigma\left( R \right) = \Sigma_{\text{crit}}\gamma\left( R \right).
     \end{equation}
 
-    So correlation functions can be computed around a selection of lensing galaxies and the statistics can be reated to $\Sigma$ and $\Delta\Sigma$, exploring how the lensing signal differs for galaxies with differing properties.
+    So correlation functions can be computed around a selection of lensing galaxies and the statistics can be reated to $\Sigma$ and $\Delta\Sigma$.
   \end{frame}
 
   \subsection{Strong Lensing}
@@ -229,18 +251,24 @@
   \end{frame}
 
   \begin{frame}
-    In this regime, the mapping $\beta \rightarrow \theta$ is no longer bijective. Given a deflection map in the image plane, for each position $\theta$ the corresponding source plane position $\beta$ can be calculated. Multiple image plane positions $\theta$ will map to the same source plane position $\beta$, defining caustic regions in the source plane from which multiple images are produced.
-    \\
-    From this, properties such as the optical depth for strong lensing can be calculated, and lensing galaxies/galaxy clusters can be matched to caustic regions in the source plane, allowing the opportunity to explore the effect of galaxy properties (halo environment, stellar mass etc) on the strong lensing signal.
+    \begin{itemize}
+      \item The mapping $\beta\rightarrow\theta$ is no longer bijective.
+      \item Regions in the source plane that correspond to multiple images are caustic regions.
+      \item The area of such regions is related to the optical depth for strong lensing $\tau$.
+      \item Galaxy catalogs can be projected into the source plane and matched with caustics, allowing cross sections to be related to galactic properties.
+    \end{itemize}
   \end{frame}
+
 
   \subsection{Limitations}
 
   \begin{frame}
     \frametitle{\sc Limitations}
-    A relevant limitation that comes with the simulated data available is that for larger source redshifts, there is more matter along the line of sight that contributes to the overall deflection. This makes it difficult to isolate the lensing signal due to individual objects as the source redshift increases. For this reason, analysis of correlation functions in the weak lensing regime for high redshift sources must be made cautiously.
-    \\
-    Another limitation is that isolating lensing galaxies at a range of redshifts from observer to source means the distances involved will vary. The overall lensing efficiency is dependent on these distances and so will vary when considering different objects in a given catalog.
+    \begin{itemize}
+      \item Larger source redshifts mean more potential for noise as the defelction is ofund by integrating along the line of sight, so intermediate matter will feature in the calculation.
+      \item Exploring small scales is limited by the resolution of the simulation as mentioned before, and the resolution of the deflection maps.
+      \item Isolating galaxies at a range of redshifts means lensing efficiency will vary depending on the distances involved.
+    \end{itemize}
   \end{frame}
 
 
@@ -319,7 +347,13 @@
   \end{frame}
 
   \begin{frame}
-    Catalogs of galaxies are provided from the Horizon AGN simulation, and for each source plane redshift the radial profiles of convergence and tangential shear was computed for every galaxy in the catalog, up to a radius of 5 Mpc - provided that the lens redshift was less than the source redshift, and also that the galaxy didn't fall in the bounding margin in the field of view. Ignoring those galaxies that appear near the edge of the field of view is an acceptable loss, as the deflection data is not always accurate at the edge of the field anyway.
+    \begin{itemize}
+      \item Catalogs of galaxies are provided for the Horizon AGN simulation.
+      \item The radial profile of $\kappa$ and $\gamma_t$ were calculated for each galaxy.
+      \item Radial bins from $R = 0.02$ Mpc to $R = 5$ Mpc were considered.
+      \item Galaxies near the edge of the field of view were excluded as the radial information would be incomplete.
+      \item This loss is acceptable as the defelction field is not always well defined near the edge of the field of view due to artefacts arising from the method of calculation within the raytracing step.
+    \end{itemize}
   \end{frame}
 
   \subsection{Radial Profiles}
@@ -385,7 +419,16 @@
   \end{frame}
 
   \begin{frame}
-    The results are as expected: the larger the stellar mass the larger the lensing statistics.
+    The results are as expected:
+    \begin{itemize}
+      \item An increase in stellar mass always corresponds to an increase in overall $\Sigma.$
+      \item Satellites have a flatter $\Sigma$ and $\Delta\Sigma$ profile at large radii.
+      \item The flatter profile and fluctuations in $\Delta\Sigma$ can be put into context of the galactic halo model:
+      \begin{itemize}
+        \item The $\Delta\Sigma$ profiles peak around the 1-halo term $\left( \Delta\Sigma_{\text{1h}} \right)$ corresponding to the main halo of the host galaxy.
+        \item $\Sigma$ profiles are much flatter in the tail as compared to centrals; satellites are expected to reside in the vicinity of a larger halo, so this corresponds to the 2-halo term $\left( \Sigma_{\text{2h}} \right)$.
+      \end{itemize}
+    \end{itemize}
   \end{frame}
 
   \subsection{Strong Lensing: Caustics}
@@ -410,13 +453,20 @@
   \end{frame}
 
   \begin{frame}
-    The area of these regions corresponds to the optical depth for strong lensing in the field of view. Sextractor was used to build a catalog of caustic regions with a sufficiently high absolute magnification (in this case $\mu > 10$). By projecting the galaxy positions from the Horizon AGN catalogs into the source plane, a 'nearest neighbours' algorithm can be used to assosciate the lensing galaxies with corresponding caustic regions in the source plane. This allows cross referencing of the optical depth with galaxy properties such as (sub-)halo mass and stellar mass, along with galactic environment. I am yet to carry out this analysis having only just built the relevant catalogs with source plane projections.
+    \begin{itemize}
+      \item Area of caustics $\rightarrow$ optical depth/strong lensing cross section.
+      \item Sextractor has been used to build catalogs of individual caustoc regions above a magnification threshold $\left( \mu > 10 \right)$.
+      \item Galaxy positions in lens planes are projected into the source plane using the lens equation, and are linked to particular caustic regions.
+      \item The most likely caustic region for each lensing galaxy is found using a nearest neighbours algorithm.
+    \end{itemize}
   \end{frame}
 
-
-
-
-
+  \begin{frame}
+    \begin{itemize}
+      \item The plan is to use this information to relate galactic properties (M$_{*}$, halo environment) to strong lensing cross section. I am yet to carry out this analysis.
+      \item An obvious issue that will arise is overcounting of caustic areas due to clustering - this will show up easily in the results and can hopefully be highlighted.
+    \end{itemize}
+  \end{frame}
 
 
 \end{document}
